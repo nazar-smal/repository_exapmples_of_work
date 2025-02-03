@@ -1,0 +1,214 @@
+version: 2
+models:
+  - name: dim_ecomm_weekly_activity_retention_cohorts
+    config:
+      schema: self_serve
+    description: "this model assigns a 'risk' category, per week, to each paid Ecomm customer. a 'risk' category is assigned based on the frequency of activity week over week."
+    columns:
+      - name: date
+        description: "calendar week for the period paid for. from the ecomm_daily_paying_customer_member.date column"
+      - name: is_customer_retained
+        description: If "1" then the customer is still a paid customer 1 calendar year from the date of payment. "O" if the customer is no longer a paid customer 1 calendar year from the date.
+      - name: is_customer_retained_and_active
+        description: If "1" then the customer is still a paid customer, AND active, 1 calendar year from the date of payment. "O" if the customer is no longer a paid customer 1 calendar year from the date.
+      - name: net_arr_retained
+        description: The Net ARR retained 1 calendar year later (excludes expansion, and includes contraction)
+      - name: gross_arr_retained
+        description: The Gross ARR retained 1 calendar year later (excludes expansion, and includes contraction)
+      - name: is_active
+        description: If "1" then the customer was active in the specified week
+      - name: activity_retention_cohort
+        description: "'risk' categories range from 'super healthy', weekly activity, to 'dormant 12 months', no activity"
+
+  - name: dim_ecomm_daily_active_paying_customers
+    config:
+      schema: self_serve
+    description: "this model identifies paying eComm users that are active in the given day"
+    columns:
+      - name: member_id
+        description: "unique id assigned to Hootsuite users"
+      - name: date
+        description: "calendar day for the period paid for. from the ecomm_daily_paying_customer_member.date column"
+      - name: icp_tiers
+        description: The tier level of the member based on the eComm ICP (AKA Prime) definition.
+      - name: plan
+        description: Hootsuite paid plan.
+      - name: billing_interval
+        description: The paid billing interval.
+      - name: market
+        description: The market in which the user is billed (e.g. NA, EMEA, LATAM, APAC)
+      - name: country
+        description: The country in which the user is billed.
+      - name: trial_type
+        description: Immediate trial or upgrade from free trial.
+      - name: acquisition_source
+        description: If the user was acquired organically or via PUA
+      - name: signup_source
+        description: Which means of signing up did the user use (e.g. web, mobile_web)
+      - name: is_customer_retained
+        description: If "1" then the customer is still a paid customer 1 calendar year from the date of payment. "O" if the customer is no longer a paid customer 1 calendar year from the date.
+      - name: is_customer_retained_and_active
+        description: If "1" then the customer is still a paid customer, AND active, 1 calendar year from the date of payment. "O" if the customer is no longer a paid customer 1 calendar year from the date.
+      - name: net_arr_retained
+        description: The Net ARR retained 1 calendar year later (excludes expansion, and includes contraction)
+      - name: gross_arr_retained
+        description: The Gross ARR retained 1 calendar year later (excludes expansion, and includes contraction)
+      - name: is_active
+        description: "If 1 then the user did at least 1 meaningful action within the specified timeframe"
+
+  - name: dim_ecomm_monthly_active_paying_customers
+    config:
+      schema: self_serve
+    description: "this model identifies paying eComm users that are active in the given month"
+    columns:
+      - name: member_id
+        description: "unique id assigned to Hootsuite users"
+      - name: date
+        description: "month of payment"
+      - name: icp_tiers
+        description: The tier level of the member based on the eComm ICP (AKA Prime) definition.
+      - name: plan
+        description: Hootsuite paid plan.
+      - name: billing_interval
+        description: The paid billing interval.
+      - name: market
+        description: The market in which the user is billed (e.g. NA, EMEA, LATAM, APAC)
+      - name: country
+        description: The country in which the user is billed.
+      - name: trial_type
+        description: Immediate trial or upgrade from free trial.
+      - name: acquisition_source
+        description: If the user was acquired organically or via PUA
+      - name: signup_source
+        description: Which means of signing up did the user use (e.g. web, mobile_web)
+      - name: is_customer_retained
+        description: If "1" then the customer is still a paid customer 1 calendar year from the date of payment. "O" if the customer is no longer a paid customer 1 calendar year from the date.
+      - name: is_customer_retained_and_active
+        description: If "1" then the customer is still a paid customer, AND active, 1 calendar year from the date of payment. "O" if the customer is no longer a paid customer 1 calendar year from the date.
+      - name: net_arr_retained
+        description: The Net ARR retained 1 calendar year later (excludes expansion, and includes contraction)
+      - name: gross_arr_retained
+        description: The Gross ARR retained 1 calendar year later (excludes expansion, and includes contraction)
+      - name: is_active
+        description: If 1 then the customer was active in the specified month
+  
+  - name: ecomm_paid_base_seats_by_member
+    config:
+      schema: self_serve
+    description: This model shows all paying and non-paying seated members of eComm plans.
+    columns:
+      - name: date
+        description: Month paid
+      - name: member_id
+        description: Primary key, unique identifier of user
+      - name: paying_member_id
+        description: The paying member for the given user. The same as member_id if they are the paying member of an org, or if the plan is not seated.
+      - name: member_type
+        description: If the user is the paying or non-paying member.
+      - name: plan
+        description: Hootsuite paid plan.
+      - name: billing_interval
+        description: The paid billing interval.
+      - name: currency
+        description: The currency the user pays in.
+      - name: market
+        description: The market in which the user is billed (e.g. NA, EMEA, LATAM, APAC)
+      - name: country
+        description: The country in which the user is billed.
+      - name: trial_type
+        description: Immediate trial or upgrade from free trial.
+      - name: trial_length
+        description: Length of the user's trial (e.g. 30/60/90/other days)
+      - name: acquisition_source
+        description: If the user was acquired organically or via PUA
+      - name: signup_source
+        description: Which means of signing up did the user use (e.g. web, mobile_web)
+      - name: activity_level
+        description: If the user was active in the given month ('active') or not ('zombie')
+      - name: icp_tiers
+        description: The tier level of the user for eComm ICP (AKA 'Prime')
+      - name: is_tier_1_icp
+        description: Boolean. If the user is tier 1 ICP (AKA 'Prime')
+  - name: ecomm_cohorts_monthly
+    config:
+      schema: ecomm_test_migration
+    description: This model shows ecomm customer and revenue retention cohorts for Finance forecasting model.
+    columns:
+      - name: cohort_month
+        description: The calendar month of the cohort of the customers by when they were included into the paid base for the first time
+      - name: date
+        description: Calendar month for the data reported
+      - name: cohort_age
+        description: The number of monthes since the start of the cohort.
+      - name: plan
+        description: Hootsuite paid plan.
+      - name: billing_interval
+        description: The paid billing interval.
+      - name: prime_segments
+        description: The tier level of the user for eComm ICP (AKA 'Prime')
+      - name: active
+        description: Boolean. Was the customer paid active in a given month
+      - name: trial_or_buynow_signup
+        description: Trial or Buy Now signup.
+      - name: count_customers
+        description: Count of customers in the cohort in a given date
+      - name: mrr
+        description: MRR of the customers in the cohort in a given date
+      - name: arr
+        description: ARR of the customers in the cohort in a given date
+      - name: initial_cohort_size
+        description: A size of the initial cohort for every date for easy calculation of retention
+  - name: ecomm_waterfall
+    config:
+      schema: ecomm_test_migration
+    description: This model shows ecomm customer and revenue waterfall for Finance forecasting model.
+    columns:
+      - name: month
+        description: The calendar month for the data reported
+      - name: metrics
+        description: The metrics in the waterfall that includes starting, net new, expansion, pricing, contruction, churn, winback, ending
+      - name: plan
+        description: Hootsuite paid plan.
+      - name: billing_interval
+        description: The paid billing interval.
+      - name: is_active
+        description: Boolean. Was the customer paid active in a given month
+      - name: is_prime_customer
+        description: Boolean. Was the customer eComm ICP (AKA 'Prime')
+      - name: after_2018_signup
+        description: Boolean. Did the customers sign-up after 2018. Important for is_active as events data is since 2018
+      - name: s.is_activated
+        description: Boolean. Did the customers activate, did 2 or more meanigful activities in the first 14 days
+      - name: arr
+        description: ARR of the customers in the cohort in a given date
+      - name: arr_change
+        description: Change of ARR of the customers in the cohort comparing to the previous calendar month      
+      - name: count_customers
+        description: Count of customers in the cohort in a given date     
+  - name: ecomm_waterfall_by_member
+    config:
+      schema: ecomm_test_migration
+    description: This model shows ecomm customer and revenue waterfall for Finance forecasting model on a member_id level.
+    columns:
+      - name: member_id
+        description: Primary key, unique identifier of user
+      - name: month
+        description: The calendar month for the data reported
+      - name: metrics
+        description: The metrics in the waterfall that includes starting, net new, expansion, pricing, contruction, churn, winback, ending
+      - name: plan
+        description: Hootsuite paid plan.
+      - name: billing_interval
+        description: The paid billing interval.
+      - name: is_active
+        description: Boolean. Was the customer paid active in a given month
+      - name: is_prime_customer
+        description: Boolean. Was the customer eComm ICP (AKA 'Prime')
+      - name: after_2018_signup
+        description: Boolean. Did the customers sign-up after 2018. Important for is_active as events data is since 2018
+      - name: s.is_activated
+        description: Boolean. Did the customers activate, did 2 or more meanigful activities in the first 14 days
+      - name: arr
+        description: ARR of the customers in the cohort in a given date
+      - name: arr_change
+        description: Change of ARR of the customers in the cohort comparing to the previous calendar month      
